@@ -1,6 +1,8 @@
 import debug from "debug";
 import express from "express";
 import http from "http";
+import https from "https";
+import fs from "fs";
 import { Server as SocketIO } from "socket.io";
 
 type UserToFollow = {
@@ -32,7 +34,12 @@ app.get("/", (req, res) => {
   res.send("Excalidraw collaboration server is up :)");
 });
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
+const server = https.createServer({
+  key: fs.readFileSync("../excalidraw/selfsigned.key"),
+  cert: fs.readFileSync("../excalidraw/selfsigned.crt"),
+}, app);
+
 
 server.listen(port, () => {
   serverDebug(`listening on port: ${port}`);
